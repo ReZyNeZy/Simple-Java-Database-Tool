@@ -4,7 +4,7 @@ import java.util.*;
 public class Main 
 {
     Scanner input = new Scanner(System.in);
-    boolean keepGoing = true;
+    boolean keepGoing;
     ArrayList<User> creds = new ArrayList<User>();
     Admin a = new Admin();
     User u = new User();
@@ -24,6 +24,7 @@ public Main()
 public void Menu()
 {
     System.out.println("DataBase Builder");
+    keepGoing = true;
     
     while (keepGoing)
     {
@@ -59,6 +60,8 @@ public void logMenu()
     System.out.println("");
     System.out.println("Insert Account Username");
     String actCred = input.nextLine();
+
+    keepGoing = true;
 
     while (keepGoing)
     {
