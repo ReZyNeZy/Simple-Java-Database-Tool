@@ -57,14 +57,14 @@ public void Menu()
 public void logMenu()
 {
     loadAccounts();
-    System.out.println("");
-    System.out.println("Insert Account Username");
-    String actCred = input.nextLine();
 
     keepGoing = true;
 
     while (keepGoing)
     {
+        System.out.println("");
+        System.out.println("Insert Account Username");
+        String actCred = input.nextLine();
 
         if (actCred.equals(a.getUsername()))
         {
@@ -73,9 +73,14 @@ public void logMenu()
 
             if(actCred.equals(a.getPassword()))
             {
-                a.Menu();
+                a.aMenu();
             }
-        }
+
+            else 
+            {
+                System.out.println("Password Incorrect");
+            }
+        }// end admin log
 
         for (int i = 0; i < creds.size(); i++)
         {
@@ -88,9 +93,18 @@ public void logMenu()
                 {
                     ac.CreateOrAccess();
                 }
+
+                else
+                {
+                    System.out.println("Password Incorrect");
+                }
             }
-        }
-    }
+
+
+        }// end user log
+
+    }// end while
+
 }//end logMenu
 
 public void createAccount()
