@@ -1,5 +1,8 @@
-Main.class: Main.java Admin.class User.class Account.class
+Main.class: Main.java Admin.class User.class Account.class Database.class
 	javac -g Main.java
+
+Database.class:
+	javac -g Database.java
 
 Admin.class:
 	javac -g Admin.java
