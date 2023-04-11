@@ -23,6 +23,7 @@ public Main()
 
 public void Menu()
 {
+    loadAccounts();
     System.out.println("DataBase Builder");
     keepGoing = true;
     
@@ -63,7 +64,7 @@ public void logMenu()
     while (keepGoing)
     {
         System.out.println("");
-        System.out.println("Insert Account Username");
+        System.out.println("Insert Account Username or press ] to go Back");
         String actCred = input.nextLine();
 
         if (actCred.equals(a.getUsername()))
@@ -91,6 +92,7 @@ public void logMenu()
 
                 if (creds.get(i).getPassword().equals(actCred))
                 {
+                    ac.setUsername(creds.get(i).getUsername());
                     ac.CreateOrAccess();
                 }
 
@@ -100,8 +102,14 @@ public void logMenu()
                 }
             }
 
-
         }// end user log
+
+        if (actCred.equals("]"))
+        {
+            System.out.println("");
+            keepGoing = false;
+            Menu();
+        }
 
     }// end while
 
@@ -127,6 +135,7 @@ public void createAccount()
 
             u.setUsername(username);
             u.setPassword(password);
+            
             creds.add(u);
 
             try (FileOutputStream out = new FileOutputStream("users.dat");
@@ -145,15 +154,19 @@ public void createAccount()
         {
             System.out.println("Passwords do not match. Try Again");
         }
+        Menu();
     }
 }//end Create Account
 
 
 public void loadAccounts()
 {
-    try (FileInputStream file = new FileInputStream("users.dat");
-         ObjectInputStream accounts = new ObjectInputStream(file);)
-         {
+    try  
+        
+        {
+        FileInputStream file = new FileInputStream("users.dat");
+         ObjectInputStream accounts = new ObjectInputStream(file);
+         
             creds = (ArrayList<User>)accounts.readObject();
 
             accounts.close();
