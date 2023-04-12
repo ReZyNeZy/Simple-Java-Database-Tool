@@ -5,7 +5,7 @@ import java.util.*;
 
 public class Account 
 {
-    
+    Database d = new Database();
     Scanner input = new Scanner(System.in);
     ArrayList<String> data = new ArrayList<>();
     String username;
@@ -59,17 +59,10 @@ public class Account
             System.out.println(i + ") " + data.get(i));
         }
 
-        while (keepGoing)
-        {
-            String response = input.nextLine();
-            response = response.toUpperCase();
-
-            if (response.equals("Q"))
-            {
-                keepGoing = false;
-                CreateOrAccess();
-            }
-        }
+            int response = input.nextInt();
+            d.setFileName(data.get(response));
+            d.Menu();
+            
 
     }
 
