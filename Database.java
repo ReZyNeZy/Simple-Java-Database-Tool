@@ -83,6 +83,7 @@ public class Database
 
     public void createEntry()
     {
+        loadEntries();
         System.out.println("Input Entry Title");
         String entry = input.nextLine();
         
@@ -107,14 +108,95 @@ public class Database
 
     public void removeEntry()
     {
+        keepGoing = true;
+        System.out.println("Select Entry to Delete");
+
+        for (int i = 0; i <entries.size(); i++)
+        {
+            System.out.println(i+ ")" + entries.get(i).getEntry());
+        }
+
+        int response = input.nextInt();
+
+        while (keepGoing)
+        {
+            System.out.println("Are You Sure You Want to Delete" + entries.get(response).getEntry());
+            System.out.println("press Y to confirm, and Q to cancel");
+
+            String delete = input.nextLine();
+            delete = delete.toUpperCase();
+
+            if (delete.equals("Y"))
+            {
+                keepGoing = false;
+                entries.remove(response);
+
+                try (FileOutputStream out = new FileOutputStream(name);
+                     ObjectOutputStream outFile = new ObjectOutputStream(out);)
+                     {
+                        outFile.writeObject(entries);
+                        outFile.close();
+                     }
+                catch(Exception e)
+                {
+                    System.out.println(e.getMessage());
+                }
+
+
+
+            }
+        }
 
     }//end remove
 
     public void editEntry()
     {
+        System.out.println("Selecrt Entry To Edit");
 
+        for (int i = 0; i < entries.size(); i++)
+        {
+            System.out.println(i + ")" + entries.get(i).getEntry());        
+        }
+
+        int response = input.nextInt();
+
+        System.out.println("Input new description for " + entries.get(response).getEntry());
+
+        String edit = input.nextLine();
+
+        e.setEntry(entries.get(response).getEntry());
+        e.setDescription(edit);
+
+        entries.set(response, e);
+
+        try (FileOutputStream out = new FileOutputStream(name);
+                     ObjectOutputStream outFile = new ObjectOutputStream(out);)
+                     {
+                        outFile.writeObject(entries);
+                        outFile.close();
+                     }
+                catch(Exception e)
+                {
+                    System.out.println(e.getMessage());
+                }
     }//end edit
 
-    
+    public void loadEntries()
+    {
+        try
+        {
+            FileInputStream file = new FileInputStream(name);
+            ObjectInputStream inFile = new ObjectInputStream(file);
+
+            entries = (ArrayList<Entry>)inFile.readObject();
+            inFile.close();
+        }
+
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+
+    }
 
 }//end Database

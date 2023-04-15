@@ -6,8 +6,10 @@ import java.util.*;
 public class Account 
 {
     Database d = new Database();
+    File f = new File();
     Scanner input = new Scanner(System.in);
-    ArrayList<String> data = new ArrayList<>();
+    ArrayList<File> data = new ArrayList<>();
+
     String username;
     String name;
     boolean keepGoing;
@@ -51,19 +53,21 @@ public class Account
     public void accessDB()
     {
         loadDBs();
+
         keepGoing = true;
 
-        System.out.println("Select Database to Access or press Q to return to menu");
-        for (int i = 0; i < data.size(); i++)
-        {
-            System.out.println(i + ") " + data.get(i));
-        }
+
+            System.out.println("Select DB to Access");
+
+            for (int i = 0; i < data.size(); i++)
+            {
+                System.out.println(i + ")" + data.get(i).getDataName());
+            }
 
             int response = input.nextInt();
-            d.setFileName(data.get(response));
-            d.Menu();
-            
 
+            d.setFileName(username + data.get(response).getDataName());
+            d.Menu();
     }
 
     public void createDB()
@@ -74,9 +78,9 @@ public class Account
         name = name + ".dat";
         
 
-        System.out.println(name);
-        System.out.println(username);
-        data.add(name);
+        f.setDataName(name);
+        
+        data.add(f);
 
         try (FileOutputStream out = new FileOutputStream(username);
              ObjectOutputStream outFile = new ObjectOutputStream(out);)
@@ -97,7 +101,7 @@ public class Account
              FileInputStream file = new FileInputStream(username);
              ObjectInputStream inFile = new ObjectInputStream(file);
 
-             data = (ArrayList<String>)inFile.readObject();
+             data = (ArrayList<File>)inFile.readObject();
              inFile.close();
          }
 
@@ -106,6 +110,72 @@ public class Account
             System.out.println(e.getMessage());
          }
     }
+
+    public void deleteDB()
+    {
+        System.out.println("Select Database to Delete");
+
+        for (int i = 0; i < data.size(); i++)
+        {
+            System.out.println(i + ")" + data.get(i).getDataName());
+        }
+
+        int response = input.nextInt();
+
+        while (keepGoing)
+        {
+            System.out.println("Are You Sure You Want to Delete" + data.get(response).getDataName());
+            System.out.println("press Y to confirm, and Q to cancel");
+
+            String delete = input.nextLine();
+
+            delete = delete.toUpperCase();
+
+            if (delete.equals("Y"))
+            {
+                keepGoing = false;
+                data.remove(response);
+
+                try (FileOutputStream out = new FileOutputStream(username);
+                     ObjectOutputStream outFile = new ObjectOutputStream(out);)
+                     {
+                        outFile.writeObject(data);
+                        outFile.close();
+                     }
+                catch(Exception e)
+                {
+                    System.out.println(e.getMessage());
+                }
+            }
+
+            if (delete.equals("Q"))
+            {
+                keepGoing = false;
+                System.out.println("Returning to Menu");
+            }
+
+            else
+            {
+                System.out.println("Invalid Input");
+            }
+        }
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     public String getUsername()
@@ -117,43 +187,6 @@ public class Account
     {
         this.username = username;
     }
-
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-    public String getName()
-    {
-        return name;
-    }
-
-    public void deleteDB()
-    {
-        loadDBs();
-        keepGoing = true;
-        System.out.println("Select Database to Delete or Press Q to Quit");
-
-        for (int i = 0; i < data.size(); i++)
-        {
-            System.out.println(i + ") " + data.get(i));
-        }
-        
-        while (keepGoing)
-        {
-
-            String response = input.nextLine();
-            response = response.toUpperCase();
-
-            if (response.equals("Q"))
-            {
-                keepGoing = false;
-                CreateOrAccess();
-            }
-
-        }// end while
-        
-
-    }// end delete
 
 
 

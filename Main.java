@@ -142,6 +142,7 @@ public void createAccount()
                  ObjectOutputStream outFile = new ObjectOutputStream(out);)
                  {
                     outFile.writeObject(creds);
+                    outFile.close();
                  }
             catch (IOException e)
                  {

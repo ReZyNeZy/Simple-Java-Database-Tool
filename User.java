@@ -1,4 +1,4 @@
-import java.io.Serializable;
+import java.io.*;
 
 class User implements Serializable
 {

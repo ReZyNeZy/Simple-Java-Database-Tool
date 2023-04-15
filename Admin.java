@@ -117,7 +117,7 @@ public class Admin
         {
             System.out.println("Type Y to confirm. Type C to Cancel");
             String delete = input.nextLine();
-            delete.toUpperCase();
+            delete = delete.toUpperCase();
             if (delete.equals("Y"))
             {
                 keepGoing = false;
