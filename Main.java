@@ -8,7 +8,7 @@ public class Main
     ArrayList<User> creds = new ArrayList<User>();
     Admin a = new Admin();
     User u = new User();
-    Account ac = new Account();
+    AccountRemake ac = new AccountRemake();
 
 
 public static void main(String[] args)
@@ -93,7 +93,7 @@ public void logMenu()
                 if (creds.get(i).getPassword().equals(actCred))
                 {
                     ac.setUsername(creds.get(i).getUsername());
-                    ac.CreateOrAccess();
+                    ac.Menu();
                 }
 
                 else

@@ -15,6 +15,7 @@ public class Database
     public void Menu()
     {
         keepGoing = true;
+        
 
         while (keepGoing)
         {
@@ -38,12 +39,12 @@ public class Database
 
             if (response.equals("3"))
             {
-                
+                removeEntry();
             }
 
             if (response.equals("4"))
             {
-                
+                editEntry();
             }
 
             if (response.equals("5"))
@@ -72,6 +73,7 @@ public class Database
 
     public void viewEntries()
     {
+        loadEntries();
         System.out.println("All Entries.");
 
         for (int i = 0; i < entries.size(); i++)
@@ -197,6 +199,11 @@ public class Database
             System.out.println(e.getMessage());
         }
 
+    }
+
+    public void testName()
+    {
+        System.out.println(name);
     }
 
 }//end Database

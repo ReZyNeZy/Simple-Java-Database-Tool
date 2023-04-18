@@ -66,8 +66,10 @@ public class Account
 
             int response = input.nextInt();
 
-            d.setFileName(username + data.get(response).getDataName());
-            d.Menu();
+            d.setFileName(data.get(response).getDataName());
+
+            d.testName();
+            //d.Menu();
     }
 
     public void createDB()
@@ -75,8 +77,7 @@ public class Account
         loadDBs();
         System.out.println("Insert name for DataBase");
         String name = input.nextLine();
-        name = name + ".dat";
-        
+
 
         f.setDataName(name);
         
