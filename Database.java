@@ -19,6 +19,7 @@ public class Database
 
         while (keepGoing)
         {
+            loadEntries();
             System.out.println("1) View Entries");
             System.out.println("2) Create Entry");
             System.out.println("3) Remove Entry");
@@ -92,15 +93,13 @@ public class Database
         System.out.println("Input Description of Entry");
         String description = input.nextLine();
 
-        e.setEntry(entry);
-        e.setDescription(description);
-
-        entries.add(e);
+        entries.add(new Entry(entry, description));
 
         try (FileOutputStream out = new FileOutputStream(name);
              ObjectOutputStream outFile = new ObjectOutputStream(out);)
              {
                 outFile.writeObject(entries);
+                outFile.close();
              }
         catch (IOException e)
         {
@@ -199,11 +198,6 @@ public class Database
             System.out.println(e.getMessage());
         }
 
-    }
-
-    public void testName()
-    {
-        System.out.println(name);
     }
 
 }//end Database

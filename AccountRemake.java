@@ -23,14 +23,14 @@ public class AccountRemake
 
         while (keepGoing)
         {
-            System.out.println("Remake for Testing");
+            
             System.out.println("______________________________");
-                System.out.println("1) Access existing DataBase");
-                System.out.println("2) Create new Database");
-                System.out.println("3) Delete Database");
-                System.out.println("4) Log Out");
-                System.out.println("______________________________");
-                String response = input.nextLine();
+            System.out.println("1) Access existing DataBase");
+            System.out.println("2) Create new Database");
+            System.out.println("3) Delete Database");
+            System.out.println("4) Log Out");
+            System.out.println("______________________________");
+            String response = input.nextLine();
 
                 if (response.equals("1"))
                 {

@@ -1,4 +1,4 @@
-Main.class: Main.java Admin.class User.class Account.class Database.class
+Main.class: Admin.class User.class Account.class Database.class
 	javac -g Main.java
 
 Database.class:
@@ -11,7 +11,7 @@ User.class:
 	javac -g User.java
 
 Account.class:
-	javac -g Savings.java
+	javac -g Account.java
 
 clean:
 	rm *.class

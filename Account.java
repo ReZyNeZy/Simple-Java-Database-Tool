@@ -19,6 +19,7 @@ public class Account
             keepGoing = true;
             while (keepGoing)
             {
+                System.out.println("Welcome to Database Manager");
                 System.out.println("______________________________");
                 System.out.println("1) Access existing DataBase");
                 System.out.println("2) Create new Database");
@@ -29,6 +30,7 @@ public class Account
 
                 if (response.equals("1"))
                 {
+                    System.out.println("here?");
                     accessDB();
                 }
 
@@ -52,11 +54,8 @@ public class Account
 
     public void accessDB()
     {
-        loadDBs();
 
-        keepGoing = true;
-
-
+            loadDBs();
             System.out.println("Select DB to Access");
 
             for (int i = 0; i < data.size(); i++)
@@ -68,8 +67,7 @@ public class Account
 
             d.setFileName(data.get(response).getDataName());
 
-            d.testName();
-            //d.Menu();
+            d.Menu();
     }
 
     public void createDB()
@@ -79,9 +77,10 @@ public class Account
         String name = input.nextLine();
 
 
-        f.setDataName(name);
+        // f.setDataName(name);
         
-        data.add(f);
+        data.add(new File(name));
+        // data.add(f);
 
         try (FileOutputStream out = new FileOutputStream(username);
              ObjectOutputStream outFile = new ObjectOutputStream(out);)

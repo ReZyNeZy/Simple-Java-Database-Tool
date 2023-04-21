@@ -127,6 +127,7 @@ public class Admin
                      ObjectOutputStream outFile = new ObjectOutputStream(out);)
                      {
                         outFile.writeObject(creds);
+                        outFile.close();
                      }
 
                      catch (Exception e)

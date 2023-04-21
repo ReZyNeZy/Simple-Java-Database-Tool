@@ -5,6 +5,18 @@ class User implements Serializable
     String username;
     String password;
 
+    public User()
+    {
+        this.username = "";
+        this.password = "";
+    }
+
+    public User(String username, String password)
+    {
+        this.username = username;
+        this.password = password;
+    }
+    
     public String getUsername()
     {
         return username;

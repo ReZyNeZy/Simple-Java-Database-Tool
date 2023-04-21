@@ -8,8 +8,7 @@ public class Main
     ArrayList<User> creds = new ArrayList<User>();
     Admin a = new Admin();
     User u = new User();
-    AccountRemake ac = new AccountRemake();
-
+    Account ac = new Account();
 
 public static void main(String[] args)
 {
@@ -93,7 +92,7 @@ public void logMenu()
                 if (creds.get(i).getPassword().equals(actCred))
                 {
                     ac.setUsername(creds.get(i).getUsername());
-                    ac.Menu();
+                    ac.CreateOrAccess();
                 }
 
                 else
@@ -132,23 +131,25 @@ public void createAccount()
         if (password.equals(confirm))
         {
             keepGoing = false;
-
-            u.setUsername(username);
-            u.setPassword(password);
             
-            creds.add(u);
+            creds.add(new User(username, password));
 
-            try (FileOutputStream out = new FileOutputStream("users.dat");
-                 ObjectOutputStream outFile = new ObjectOutputStream(out);)
-                 {
+            try 
+            
+                {
+                    FileOutputStream out = new FileOutputStream("users.dat");
+                    ObjectOutputStream outFile = new ObjectOutputStream(out);
+                 
                     outFile.writeObject(creds);
+                    
                     outFile.close();
+                    out.close();
                  }
             catch (IOException e)
                  {
                     System.out.println("e.getMessage");
                  }
-
+                 
         }
 
         else
