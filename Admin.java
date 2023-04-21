@@ -41,8 +41,7 @@ public class Admin
             System.out.println("______________________");
             System.out.println("1) View All users");
             System.out.println("2) Delete User");
-            System.out.println("3) View  User Data");
-            System.out.println("4) Log Out");
+            System.out.println("3) Log Out");
             System.out.println("______________________");
 
             String response = input.nextLine();
@@ -57,13 +56,8 @@ public class Admin
             {
                 deleteUser();
             }
-
-            if (response.equals("3"))
-            {
-                viewData();
-            }
         
-            if (response.equals("4"))
+            if (response.equals("3"))
             {
                 System.out.println("Logout Successful");
                 keepGoing = false;
@@ -151,11 +145,6 @@ public class Admin
 
         }
 
-
-    }
-
-    public void viewData()
-    {
 
     }
 
