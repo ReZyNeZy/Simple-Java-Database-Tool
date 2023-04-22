@@ -1,4 +1,7 @@
 import java.io.*;
+
+import java.io.File;
+
 import java.util.*;
 
 public class Main 
@@ -91,8 +94,29 @@ public void logMenu()
 
                 if (creds.get(i).getPassword().equals(actCred))
                 {
+
+                    try
+                    {
+                        File dbStorage = new File(creds.get(i).getUsername());
+
+                        if (dbStorage.createNewFile())
+                        {
+                            System.out.println("File " + creds.get(i).getUsername() + "Created");
+                            ac.setUsername(creds.get(i).getUsername());
+                            ac.CreateOrAccess();
+                        }
+                        else
+                        {
+                            ac.setUsername(creds.get(i).getUsername());
+                            ac.CreateOrAccess();
+                        }
+                    }
+
+                    catch (IOException e)
+                    {
+                        System.out.println(e.getMessage());
+                    }
                     ac.setUsername(creds.get(i).getUsername());
-                    ac.CreateOrAccess();
                 }
 
                 else
@@ -178,6 +202,7 @@ public void loadAccounts()
         System.out.println(e.getMessage());
     }
 }
+
 
 }//end Main
 

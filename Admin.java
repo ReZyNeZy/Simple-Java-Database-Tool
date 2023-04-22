@@ -8,6 +8,8 @@ public class Admin
     Scanner input = new Scanner(System.in);
     boolean keepGoing;
     ArrayList<User> creds = new ArrayList<>();
+    ArrayList<Files> databases = new ArrayList<>();
+    ArrayList<Entry> entries = new ArrayList<>();
 
 
     public void setUsername(String username)
@@ -34,15 +36,16 @@ public class Admin
 
     public void aMenu()
     {
-        keepGoing = true;
-        while (keepGoing)
-        {
+        loadAccounts();
+
+            System.out.println("");
             System.out.println("SPECIAL ADMIN MENU");
             System.out.println("______________________");
             System.out.println("1) View All users");
             System.out.println("2) Delete User");
-            System.out.println("3) Log Out");
+            System.out.println("4) Log Out");
             System.out.println("______________________");
+            System.out.println("");
 
             String response = input.nextLine();
 
@@ -56,25 +59,30 @@ public class Admin
             {
                 deleteUser();
             }
+
+            if(response.equals("3"))
+            {
+                //viewFiles();
+            }
         
-            if (response.equals("3"))
+            if (response.equals("4"))
             {
                 System.out.println("Logout Successful");
                 keepGoing = false;
             }
             else
             {
-                System.out.println("Input Invalid. Try Again");
                 System.out.println("");
+                aMenu();
             }
-        }
+        
     }
 
     public void viewUser()
     {
-        loadAccounts();
 
         System.out.println("Current Users In System");
+        System.out.println("");
 
         for (int i = 0; i< creds.size(); i++)
         {
@@ -86,66 +94,105 @@ public class Admin
 
     public void deleteUser()
     {
-        System.out.println("Select User to Delete");
-
-        int i;
-
-        for (i = 0; i< creds.size(); i++)
+        System.out.println("Select User to Remove. or type Q to quit");
+        System.out.println("");
+        for (int i = 0; i < creds.size(); i++)
         {
-            System.out.println(i + ") " + "Username: " + creds.get(i).getUsername() + "Password: " + creds.get(i).getPassword());
-            System.out.println("");
-
-            
+            System.out.println(i + ") Username: " + creds.get(i).getUsername());
         }
-        // int legal = i;
-        // System.out.println(legal);
-        int response = input.nextInt();
 
-       // if (response == legal)
+        String response = input.nextLine();
 
-        System.out.println("Confirm delete of " + creds.get(response).getUsername());
-  
-        keepGoing = true;
+        response = response.toUpperCase();
 
-        while (keepGoing)
+        if (response.equals("Q"))
         {
-            System.out.println("Type Y to confirm. Type C to Cancel");
-            String delete = input.nextLine();
-            delete = delete.toUpperCase();
-            if (delete.equals("Y"))
-            {
-                keepGoing = false;
-                creds.remove(response);
+            System.out.println("Returning to Menu");
+        }
 
-                try (FileOutputStream out = new FileOutputStream("valut.dat");
-                     ObjectOutputStream outFile = new ObjectOutputStream(out);)
-                     {
+
+        else
+        {
+
+            System.out.println("Type 1 to confirm. Type any other key to return to menu");
+
+            String confirm = input.nextLine();
+
+            if (confirm.equals("1"))
+            {
+                int remove = Integer.parseInt(response);
+                creds.remove(remove);
+
+                try
+                    {
+                        FileOutputStream out = new FileOutputStream("users.dat");
+                        ObjectOutputStream outFile = new ObjectOutputStream(out);
+
                         outFile.writeObject(creds);
+                    
                         outFile.close();
-                     }
+                        out.close();
+                    }
 
-                     catch (Exception e)
-                     {
+                catch (Exception e)
+                    {
                         System.out.println(e.getMessage());
-                     }
-                System.out.println("Delete Successful");
+                    }
             }
-
-            if (delete.equals("C"))
+        
+            else
             {
-                keepGoing = false;
                 System.out.println("Returning to Menu");
-                System.out.println("");
-            }
-
-            else 
-            {
-                System.out.println("Response invalid");
             }
 
         }
+    }// end delete
 
+    public void viewFiles()
+    {
+        System.out.println("Select User to View Files from. Or Press Q to Return to Menu");
 
+        for (int i = 0; i < creds.size(); i++)
+        {
+            System.out.println(i + ") Username: " + creds.get(i).getUsername());
+        }
+
+        String response = input.nextLine();
+
+        response = response.toUpperCase();
+
+        if (response.equals("Q"))
+        {
+            System.out.println("Returning to Menu");
+        }
+
+        else
+        {
+            try
+            {
+                int index  = Integer.parseInt(response);
+
+                String whichUser = creds.get(index).getUsername();
+                FileInputStream in = new FileInputStream(whichUser);
+                ObjectInputStream inFile = new ObjectInputStream(in);
+
+                databases = (ArrayList<Files>)inFile.readObject();
+
+                inFile.close();
+                in.close();
+            }
+            catch(IOException e)
+            {
+                System.out.println(e.getMessage());
+            }
+
+            catch(Exception e)
+            {
+                System.out.println("Invalid Index Value");
+            }
+
+            System.out.println("Select User DB to view Entries of.");
+        }
     }
 
     public void loadAccounts()
@@ -156,8 +203,9 @@ public class Admin
             creds = (ArrayList<User>)accounts.readObject();
 
             accounts.close();
+            file.close();
          }
-    catch(Exception e)
+    catch(IOException e)
     {
         System.out.println(e.getMessage());
     }

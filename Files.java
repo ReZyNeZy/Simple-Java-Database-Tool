@@ -1,17 +1,17 @@
 import java.io.*;
 
 
-public class File implements Serializable
+public class Files implements Serializable
 {
 
     String dataName;
 
-    public File() 
+    public Files() 
     {
         this.dataName = "";
     }
 
-    public File(String name) 
+    public Files(String name) 
     {
         this.dataName = name;
 

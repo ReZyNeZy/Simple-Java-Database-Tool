@@ -1,4 +1,5 @@
 import java.io.*;
+import java.io.File;
 import java.util.*;
 
 
@@ -6,9 +7,9 @@ import java.util.*;
 public class Account 
 {
     Database d = new Database();
-    File f = new File();
+    Files f = new Files();
     Scanner input = new Scanner(System.in);
-    ArrayList<File> data = new ArrayList<>();
+    ArrayList<Files> data = new ArrayList<>();
 
     String username;
     String name;
@@ -16,21 +17,22 @@ public class Account
 
     public void CreateOrAccess()
         {
-            keepGoing = true;
-            while (keepGoing)
-            {
+            loadDBs();
+ 
+                System.out.println("");
                 System.out.println("Welcome to Database Manager");
+                System.out.println("");
                 System.out.println("______________________________");
                 System.out.println("1) Access existing DataBase");
                 System.out.println("2) Create new Database");
                 System.out.println("3) Delete Database");
                 System.out.println("4) Log Out");
                 System.out.println("______________________________");
+                System.out.println("");
                 String response = input.nextLine();
 
                 if (response.equals("1"))
                 {
-                    System.out.println("here?");
                     accessDB();
                 }
 
@@ -48,38 +50,82 @@ public class Account
                 {
                     keepGoing = false;
                 }
-            }//end while
+
+                else
+                {
+                    System.out.println("Invalid Input");
+                    CreateOrAccess();
+                }
 
         }//end CreateOrAccess
 
     public void accessDB()
     {
 
-            loadDBs();
-            System.out.println("Select DB to Access");
+            System.out.println("Select DB to Access. Or Press Q to Quit.");
 
             for (int i = 0; i < data.size(); i++)
             {
                 System.out.println(i + ")" + data.get(i).getDataName());
             }
 
-            int response = input.nextInt();
+            String response = input.nextLine();
 
-            d.setFileName(data.get(response).getDataName());
+            response = response.toUpperCase();
 
-            d.Menu();
-    }
+            if (response.equals("Q"))
+            {
+                System.out.println("Returning to Menu");
+            }
+            
+            else 
+            {
+                try
+                {
+                    int confirm = Integer.parseInt(response);
+                    d.setFileName(data.get(confirm).getDataName());
+                    d.Menu();
+                }
+
+                catch (Exception e)
+                {
+                    System.out.println("");
+                    System.out.println("Your Response is not a number associated with your DataBases!");
+                }
+            }
+        
+        }  // end access
+     
 
     public void createDB()
     {
-        loadDBs();
         System.out.println("Insert name for DataBase");
         String name = input.nextLine();
 
 
         // f.setDataName(name);
         
-        data.add(new File(name));
+        data.add(new Files(name));
+
+        try
+        {
+            File database = new File(name);
+
+            if (database.createNewFile())
+            {
+                System.out.println("File Created For " + name);
+            }
+
+            else 
+            {
+                System.out.println("WARNING. You have created a databases with matching names. THis could cause issues with storing your data.");
+            }
+        }
+
+        catch (IOException e )
+        {
+            System.out.println(e.getMessage());
+        }
         // data.add(f);
 
         try (FileOutputStream out = new FileOutputStream(username);
@@ -87,12 +133,14 @@ public class Account
              {
                 outFile.writeObject(data);
                 outFile.close();
+                out.close();
              }
         catch (IOException e)
         {
             System.out.println("e.getMessage");
         }
-    }
+    
+    }//end create
 
     public void loadDBs()
     {
@@ -101,8 +149,9 @@ public class Account
              FileInputStream file = new FileInputStream(username);
              ObjectInputStream inFile = new ObjectInputStream(file);
 
-             data = (ArrayList<File>)inFile.readObject();
+             data = (ArrayList<Files>)inFile.readObject();
              inFile.close();
+             file.close();
          }
 
          catch (Exception e)
@@ -113,56 +162,72 @@ public class Account
 
     public void deleteDB()
     {
-        System.out.println("Select Database to Delete");
+       System.out.println("Select DB to Delete. Or Press Q to Return to Menu");
+       System.out.println("");
 
-        for (int i = 0; i < data.size(); i++)
-        {
+       for (int i = 0; i < data.size(); i++)
+       {
             System.out.println(i + ")" + data.get(i).getDataName());
-        }
+       }
 
-        int response = input.nextInt();
+            String response = input.nextLine();
 
-        while (keepGoing)
-        {
-            System.out.println("Are You Sure You Want to Delete" + data.get(response).getDataName());
-            System.out.println("press Y to confirm, and Q to cancel");
+            response = response.toUpperCase();
 
-            String delete = input.nextLine();
-
-            delete = delete.toUpperCase();
-
-            if (delete.equals("Y"))
+            if (response.equals("Q"))
             {
-                keepGoing = false;
-                data.remove(response);
-
-                try (FileOutputStream out = new FileOutputStream(username);
-                     ObjectOutputStream outFile = new ObjectOutputStream(out);)
-                     {
-                        outFile.writeObject(data);
-                        outFile.close();
-                     }
-                catch(Exception e)
-                {
-                    System.out.println(e.getMessage());
-                }
-            }
-
-            if (delete.equals("Q"))
-            {
-                keepGoing = false;
                 System.out.println("Returning to Menu");
             }
 
             else
             {
-                System.out.println("Invalid Input");
-            }
-        }
+                System.out.println("Are You Sure You Want to Delete this Entry? Type 1 for Yes and 2 for No");
 
+                String confirm = input.nextLine();
 
+                if (confirm.equals("1"))
+                {
 
-    }
+                    try
+                    {
+                    int remove = Integer.parseInt(response);
+                    data.remove(remove);
+
+                    System.out.println("Successfully Deleted");
+                    }
+
+                    catch (Exception e)
+                    {
+                        System.out.println("Your initial entry must not be correct. Make sure you input the number assciated with the DB you wish to delete");
+                    }
+
+                    try 
+                    {
+                        FileOutputStream out = new FileOutputStream(username);
+                         ObjectOutputStream outFile = new ObjectOutputStream(out);
+                    
+                       outFile.writeObject(data);
+                       outFile.close();
+                       out.close();
+                    }
+                    catch(Exception e)
+                    {
+                        System.out.println(e.getMessage());
+                    }
+                }
+
+                if (confirm.equals("2"))
+                {
+                    System.out.println("Returning to Menu");
+                }
+
+                else
+                {
+                
+                }//end else
+            }// end else Q
+
+    }//end delete
 
 
 

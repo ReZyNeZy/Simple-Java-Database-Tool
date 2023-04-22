@@ -1,3 +1,4 @@
+
 import java.util.*;
 import java.io.*;
 
@@ -14,17 +15,19 @@ public class Database
 
     public void Menu()
     {
-        keepGoing = true;
-        
+        loadEntries();
 
-        while (keepGoing)
-        {
-            loadEntries();
+            System.out.println("");
+            System.out.println(" Welcome to " + name);
+            System.out.println("______________________________");
             System.out.println("1) View Entries");
             System.out.println("2) Create Entry");
             System.out.println("3) Remove Entry");
             System.out.println("4) Edit Description of Entry");
             System.out.println("5) Select New Database");
+            System.out.println("______________________________");
+            System.out.println("");
+
 
             String response = input.nextLine();
 
@@ -58,9 +61,10 @@ public class Database
             else
             {
                 System.out.println("Invalid Input");
+                Menu();
             }
-        }
-    }
+        
+    }// end menu
 
     public String getFileName()
     {
@@ -74,19 +78,20 @@ public class Database
 
     public void viewEntries()
     {
-        loadEntries();
+        System.out.println("");
         System.out.println("All Entries.");
 
         for (int i = 0; i < entries.size(); i++)
         {
+            System.out.println("");
             System.out.println("Entry: " + entries.get(i).getEntry());
             System.out.println("Description: " + entries.get(i).getDescription());
+            System.out.println("");
         }
-    }// view
+    }// end view
 
     public void createEntry()
     {
-        loadEntries();
         System.out.println("Input Entry Title");
         String entry = input.nextLine();
         
@@ -109,77 +114,121 @@ public class Database
 
     public void removeEntry()
     {
-        keepGoing = true;
-        System.out.println("Select Entry to Delete");
-
-        for (int i = 0; i <entries.size(); i++)
-        {
-            System.out.println(i+ ")" + entries.get(i).getEntry());
-        }
-
-        int response = input.nextInt();
-
-        while (keepGoing)
-        {
-            System.out.println("Are You Sure You Want to Delete" + entries.get(response).getEntry());
-            System.out.println("press Y to confirm, and Q to cancel");
-
-            String delete = input.nextLine();
-            delete = delete.toUpperCase();
-
-            if (delete.equals("Y"))
-            {
-                keepGoing = false;
-                entries.remove(response);
-
-                try (FileOutputStream out = new FileOutputStream(name);
-                     ObjectOutputStream outFile = new ObjectOutputStream(out);)
-                     {
-                        outFile.writeObject(entries);
-                        outFile.close();
-                     }
-                catch(Exception e)
-                {
-                    System.out.println(e.getMessage());
-                }
-
-
-
-            }
-        }
-
-    }//end remove
-
-    public void editEntry()
-    {
-        System.out.println("Selecrt Entry To Edit");
+        System.out.println("Select DB to Delete. Or Press Q to Return to Menu");  
+        System.out.println("");
 
         for (int i = 0; i < entries.size(); i++)
         {
             System.out.println(i + ")" + entries.get(i).getEntry());        
         }
 
-        int response = input.nextInt();
+        String response = input.nextLine();
 
-        System.out.println("Input new description for " + entries.get(response).getEntry());
+            response = response.toUpperCase();
 
-        String edit = input.nextLine();
+            if (response.equals("Q"))
+            {
+                System.out.println("Returning to Menu");
+            }
 
-        e.setEntry(entries.get(response).getEntry());
-        e.setDescription(edit);
+            else
+            {
+                System.out.println("Are You Sure You Want to Delete this Entry? Type 1 for Yes and 2 for No");
+                String confirm = input.nextLine();
 
-        entries.set(response, e);
+                if (confirm.equals("1"))
+                {
 
-        try (FileOutputStream out = new FileOutputStream(name);
-                     ObjectOutputStream outFile = new ObjectOutputStream(out);)
-                     {
-                        outFile.writeObject(entries);
-                        outFile.close();
-                     }
+                    try
+                    {
+                    int remove = Integer.parseInt(response);
+                    entries.remove(remove);
+                    }
+
+                    catch (Exception e)
+                    {
+                        System.out.println("Your initial entry must not be correct. Make sure you input the number assciated with the Entry you wish to delete.");
+                    }
+
+                    try 
+                    {
+                        FileOutputStream out = new FileOutputStream(name);
+                         ObjectOutputStream outFile = new ObjectOutputStream(out);
+                    
+                       outFile.writeObject(entries);
+                       outFile.close();
+                       out.close();
+                    }
+                    catch(Exception e)
+                    {
+                        System.out.println(e.getMessage());
+                    }
+                }
+
+                if (confirm.equals("2"))
+                {
+                    System.out.println("Returning to Menu");
+                }
+
+                else
+                {
+                
+                }//end else
+            }
+
+    }//end remove
+
+    public void editEntry()
+    {
+        System.out.println("Selecrt Entry To Edit. Or Press Q to quit");
+
+        for (int i = 0; i < entries.size(); i++)
+        {
+            System.out.println(i + ")" + entries.get(i).getEntry());        
+        }
+
+        String response = input.nextLine();
+        response = response.toUpperCase();
+
+        if (response.equals("Q"))
+        {
+            System.out.println("");
+            System.out.println("Returning to Menu");
+        }
+
+        else
+        {
+            try
+            {
+                int edit = Integer.parseInt(response);
+                System.out.println("Input new description for " + entries.get(edit).getEntry());
+
+                String newDesc = input.nextLine();
+
+                entries.set(edit, new Entry(entries.get(edit).getEntry(), newDesc));
+
+                try
+                {
+                    FileOutputStream out = new FileOutputStream(name);
+                    ObjectOutputStream outFile = new ObjectOutputStream(out);
+                                 
+                    outFile.writeObject(entries);
+                    outFile.close();
+                    out.close();
+                }
+
                 catch(Exception e)
                 {
                     System.out.println(e.getMessage());
                 }
+            }
+
+            catch(Exception e)
+            {
+                System.out.println("Something Went Wrong. Make Sure You are Entering a Valid Number");
+            }
+        }
+
     }//end edit
 
     public void loadEntries()
@@ -198,6 +247,6 @@ public class Database
             System.out.println(e.getMessage());
         }
 
-    }
+    }// end load entries
 
 }//end Database
