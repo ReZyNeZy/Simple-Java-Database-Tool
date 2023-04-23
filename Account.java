@@ -4,16 +4,30 @@ import java.util.*;
 
 
 
-public class Account 
+public class Account implements Serializable
 {
-    Database d = new Database();
     Files f = new Files();
-    Scanner input = new Scanner(System.in);
-    ArrayList<Files> data = new ArrayList<>();
+    static Scanner input = new Scanner(System.in);
+    ArrayList<Database> data = new ArrayList<Database>();
 
     String username;
+    String password;
     String name;
     boolean keepGoing;
+
+
+public Account()
+{
+    this.username = "";
+    this.password = "";
+}//end null construct
+
+public Account (String username, String password)
+{
+    this.username = username;
+    this.password = password;
+}// end user and pass construct
+
 
     public void CreateOrAccess()
         {
@@ -66,7 +80,7 @@ public class Account
 
             for (int i = 0; i < data.size(); i++)
             {
-                System.out.println(i + ")" + data.get(i).getDataName());
+                System.out.println(i + ")" + data.get(i).getFileName());
             }
 
             String response = input.nextLine();
@@ -83,8 +97,7 @@ public class Account
                 try
                 {
                     int confirm = Integer.parseInt(response);
-                    d.setFileName(data.get(confirm).getDataName());
-                    d.Menu();
+                    data.get(confirm).Menu();
                 }
 
                 catch (Exception e)
@@ -100,16 +113,17 @@ public class Account
     public void createDB()
     {
         System.out.println("Insert name for DataBase");
-        String name = input.nextLine();
+       
+        String dbName = input.nextLine();
 
 
         // f.setDataName(name);
         
-        data.add(new Files(name));
+        data.add(new Database(dbName));
 
         try
         {
-            File database = new File(name);
+            File database = new File(dbName);
 
             if (database.createNewFile())
             {
@@ -149,7 +163,7 @@ public class Account
              FileInputStream file = new FileInputStream(username);
              ObjectInputStream inFile = new ObjectInputStream(file);
 
-             data = (ArrayList<Files>)inFile.readObject();
+             data = (ArrayList<Database>)inFile.readObject();
              inFile.close();
              file.close();
          }
@@ -167,7 +181,7 @@ public class Account
 
        for (int i = 0; i < data.size(); i++)
        {
-            System.out.println(i + ")" + data.get(i).getDataName());
+            System.out.println(i + ")" + data.get(i).getFileName());
        }
 
             String response = input.nextLine();
@@ -232,7 +246,41 @@ public class Account
 
 
 
+public void AdminCheck()
+{
+    for (int i = 0; i < data.size(); i++)
+    {
+        System.out.println(i + ") " + data.get(i).getFileName());
+        System.out.println("");
+    }
 
+    String viewContent = input.nextLine();
+    viewContent = viewContent.toUpperCase();
+
+    if (viewContent.equals("Q"))
+    {
+        System.out.println("Returning to Menu");
+    }
+
+    else
+    {
+        try
+        {
+            int send = Integer.parseInt(viewContent);
+
+            System.out.println("All Entries in " + data.get(send).getFileName());
+            System.out.println("Select Entry to Flag or Press Q to Return to Menu");
+
+            data.get(send).AdminView();
+
+        }
+
+        catch(Exception e)
+        {
+            System.out.println("Something Went Wrong");
+        }
+    }
+}
 
 
 
@@ -252,6 +300,17 @@ public class Account
     {
         this.username = username;
     }
+
+    public String getPassword()
+    {
+        return password;
+    }
+
+    public void setPassword(String password)
+    {
+        this.password = password;
+    }
+
 
 
 

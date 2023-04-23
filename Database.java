@@ -2,23 +2,33 @@
 import java.util.*;
 import java.io.*;
 
-public class Database
+public class Database implements Serializable
 
 {
     boolean keepGoing;
-    ArrayList<Entry> entries = new ArrayList<>();
-    String name;
-    Scanner input = new Scanner(System.in);
+    ArrayList<Entry> entries = new ArrayList<Entry>();
+    String dbName;
+    static Scanner input = new Scanner(System.in);
     Entry e = new Entry();
 
     
+
+    public Database()
+    {
+        this.dbName = "";
+    }
+
+    public Database(String dbName)
+    {
+        this.dbName = dbName;
+    }
 
     public void Menu()
     {
         loadEntries();
 
             System.out.println("");
-            System.out.println(" Welcome to " + name);
+            System.out.println(" Welcome to " + dbName);
             System.out.println("______________________________");
             System.out.println("1) View Entries");
             System.out.println("2) Create Entry");
@@ -60,21 +70,10 @@ public class Database
 
             else
             {
-                System.out.println("Invalid Input");
                 Menu();
             }
         
     }// end menu
-
-    public String getFileName()
-    {
-        return name;
-    }
-
-    public void setFileName(String name)
-    {
-        this.name = name;
-    }
 
     public void viewEntries()
     {
@@ -100,7 +99,7 @@ public class Database
 
         entries.add(new Entry(entry, description));
 
-        try (FileOutputStream out = new FileOutputStream(name);
+        try (FileOutputStream out = new FileOutputStream(dbName);
              ObjectOutputStream outFile = new ObjectOutputStream(out);)
              {
                 outFile.writeObject(entries);
@@ -152,7 +151,7 @@ public class Database
 
                     try 
                     {
-                        FileOutputStream out = new FileOutputStream(name);
+                        FileOutputStream out = new FileOutputStream(dbName);
                          ObjectOutputStream outFile = new ObjectOutputStream(out);
                     
                        outFile.writeObject(entries);
@@ -209,7 +208,7 @@ public class Database
 
                 try
                 {
-                    FileOutputStream out = new FileOutputStream(name);
+                    FileOutputStream out = new FileOutputStream(dbName);
                     ObjectOutputStream outFile = new ObjectOutputStream(out);
                                  
                     outFile.writeObject(entries);
@@ -231,11 +230,66 @@ public class Database
 
     }//end edit
 
+
+    public void AdminView()
+    {
+        for (int i = 0; i < entries.size(); i++)
+        {
+            System.out.println("");
+            System.out.println(i + ") Entry: " + entries.get(i).getEntry());
+            System.out.println("   Description: " + entries.get(i).getDescription());
+            System.out.println("");
+        }
+
+        String flag = input.nextLine();
+
+        if (flag.equals("Q"))
+        {
+            System.out.println("Returning to Menu");
+        }
+
+        else
+        {
+            try
+            {
+                
+                System.out.println("Type 1 to confirm. Press any other Key to Return to Menu");
+
+                String aConfirm = input.nextLine();
+
+                if (aConfirm.equals("1"))
+                {
+                    int aDelete = Integer.parseInt(flag);
+
+                    entries.remove(aDelete);
+
+                    String eWarning = "WARNING";
+                    String dWarning = "One of your entries was flaged for malicious content and deleted.";
+
+                    entries.add(new Entry(eWarning, dWarning));
+                }
+
+                else
+                {
+                    System.out.println("Returning to Menu");
+                }
+                
+            }
+
+            catch(Exception e)
+            {
+                System.out.println(e.getMessage());
+            }
+        }
+
+
+    }// end Admin Eyes
+
     public void loadEntries()
     {
         try
         {
-            FileInputStream file = new FileInputStream(name);
+            FileInputStream file = new FileInputStream(dbName);
             ObjectInputStream inFile = new ObjectInputStream(file);
 
             entries = (ArrayList<Entry>)inFile.readObject();
@@ -248,5 +302,16 @@ public class Database
         }
 
     }// end load entries
+
+    
+    public String getFileName()
+    {
+        return dbName;
+    }
+
+    public void setFileName(String dbName)
+    {
+        this.dbName = dbName;
+    }
 
 }//end Database

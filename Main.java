@@ -8,9 +8,8 @@ public class Main
 {
     Scanner input = new Scanner(System.in);
     boolean keepGoing;
-    ArrayList<User> creds = new ArrayList<User>();
+    ArrayList<Account> accounts  = new ArrayList<Account>();
     Admin a = new Admin();
-    User u = new User();
     Account ac = new Account();
 
 public static void main(String[] args)
@@ -85,30 +84,29 @@ public void logMenu()
             }
         }// end admin log
 
-        for (int i = 0; i < creds.size(); i++)
+        for (int i = 0; i < accounts.size(); i++)
         {
-            if (creds.get(i).getUsername().equals(actCred))
+            if (accounts.get(i).getUsername().equals(actCred))
             {
                 System.out.println("Please input Password");
                 actCred = input.nextLine();
 
-                if (creds.get(i).getPassword().equals(actCred))
+                if (accounts.get(i).getPassword().equals(actCred))
                 {
 
                     try
                     {
-                        File dbStorage = new File(creds.get(i).getUsername());
+                        File dbStorage = new File(accounts.get(i).getUsername());
 
                         if (dbStorage.createNewFile())
                         {
-                            System.out.println("File " + creds.get(i).getUsername() + "Created");
-                            ac.setUsername(creds.get(i).getUsername());
+                            System.out.println("File " + accounts.get(i).getUsername() + "Created");
+                            ac.setUsername(accounts.get(i).getUsername());
                             ac.CreateOrAccess();
                         }
                         else
                         {
-                            ac.setUsername(creds.get(i).getUsername());
-                            ac.CreateOrAccess();
+                            accounts.get(i).CreateOrAccess();
                         }
                     }
 
@@ -116,7 +114,7 @@ public void logMenu()
                     {
                         System.out.println(e.getMessage());
                     }
-                    ac.setUsername(creds.get(i).getUsername());
+                    ac.setUsername(accounts.get(i).getUsername());
                 }
 
                 else
@@ -156,7 +154,7 @@ public void createAccount()
         {
             keepGoing = false;
             
-            creds.add(new User(username, password));
+            accounts.add(new Account(username, password));
 
             try 
             
@@ -164,14 +162,14 @@ public void createAccount()
                     FileOutputStream out = new FileOutputStream("users.dat");
                     ObjectOutputStream outFile = new ObjectOutputStream(out);
                  
-                    outFile.writeObject(creds);
+                    outFile.writeObject(accounts);
                     
                     outFile.close();
                     out.close();
                  }
             catch (IOException e)
                  {
-                    System.out.println("e.getMessage");
+                    System.out.println(e.getMessage());
                  }
                  
         }
@@ -191,11 +189,11 @@ public void loadAccounts()
         
         {
         FileInputStream file = new FileInputStream("users.dat");
-         ObjectInputStream accounts = new ObjectInputStream(file);
+         ObjectInputStream users = new ObjectInputStream(file);
          
-            creds = (ArrayList<User>)accounts.readObject();
+            accounts = (ArrayList<Account>)users.readObject();
 
-            accounts.close();
+            users.close();
          }
     catch(Exception e)
     {

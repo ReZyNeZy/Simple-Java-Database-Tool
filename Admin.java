@@ -7,9 +7,7 @@ public class Admin
     String password;
     Scanner input = new Scanner(System.in);
     boolean keepGoing;
-    ArrayList<User> creds = new ArrayList<>();
-    ArrayList<Files> databases = new ArrayList<>();
-    ArrayList<Entry> entries = new ArrayList<>();
+    ArrayList<Account> accounts = new ArrayList<Account>();
 
 
     public void setUsername(String username)
@@ -43,6 +41,7 @@ public class Admin
             System.out.println("______________________");
             System.out.println("1) View All users");
             System.out.println("2) Delete User");
+            System.out.println("3) View User Data. Delete User Data");
             System.out.println("4) Log Out");
             System.out.println("______________________");
             System.out.println("");
@@ -52,6 +51,8 @@ public class Admin
 
             if (response.equals("1"))
             {
+                System.out.println("Current Users in System");
+                System.out.println("");
                 viewUser();
             }
 
@@ -62,7 +63,9 @@ public class Admin
 
             if(response.equals("3"))
             {
-                //viewFiles();
+                System.out.println("Select User to Access. Or press Q to quit");
+                System.out.println("");
+                viewFiles();
             }
         
             if (response.equals("4"))
@@ -81,13 +84,10 @@ public class Admin
     public void viewUser()
     {
 
-        System.out.println("Current Users In System");
-        System.out.println("");
-
-        for (int i = 0; i< creds.size(); i++)
+        for (int i = 0; i< accounts.size(); i++)
         {
-            int num = i + 1;
-            System.out.println(num + ") " + "Username: " + creds.get(i).getUsername() + " " + "Password: " + creds.get(i).getPassword());
+            System.out.println(i + ") " + "Username: " + accounts.get(i).getUsername());
+            System.out.println("   Password: " + accounts.get(i).getPassword());
             System.out.println("");
         }
     }
@@ -96,9 +96,9 @@ public class Admin
     {
         System.out.println("Select User to Remove. or type Q to quit");
         System.out.println("");
-        for (int i = 0; i < creds.size(); i++)
+        for (int i = 0; i < accounts.size(); i++)
         {
-            System.out.println(i + ") Username: " + creds.get(i).getUsername());
+            System.out.println(i + ") Username: " + accounts.get(i).getUsername());
         }
 
         String response = input.nextLine();
@@ -121,14 +121,14 @@ public class Admin
             if (confirm.equals("1"))
             {
                 int remove = Integer.parseInt(response);
-                creds.remove(remove);
+                accounts.remove(remove);
 
                 try
                     {
                         FileOutputStream out = new FileOutputStream("users.dat");
                         ObjectOutputStream outFile = new ObjectOutputStream(out);
 
-                        outFile.writeObject(creds);
+                        outFile.writeObject(accounts);
                     
                         outFile.close();
                         out.close();
@@ -150,64 +150,58 @@ public class Admin
 
     public void viewFiles()
     {
-        System.out.println("Select User to View Files from. Or Press Q to Return to Menu");
+        viewUser();
 
-        for (int i = 0; i < creds.size(); i++)
-        {
-            System.out.println(i + ") Username: " + creds.get(i).getUsername());
-        }
+        String reply = input.nextLine();
+        reply = reply.toUpperCase();
 
-        String response = input.nextLine();
-
-        response = response.toUpperCase();
-
-        if (response.equals("Q"))
+        if (reply.equals("Q"))
         {
             System.out.println("Returning to Menu");
-        }
+        }//end quit
 
         else
         {
             try
             {
-                int index  = Integer.parseInt(response);
+                int select = Integer.parseInt(reply);
 
-                String whichUser = creds.get(index).getUsername();
-                FileInputStream in = new FileInputStream(whichUser);
-                ObjectInputStream inFile = new ObjectInputStream(in);
+               String user = accounts.get(select).getUsername();
 
-                databases = (ArrayList<Files>)inFile.readObject();
+               System.out.println("All data Belonging to " + user);
+               System.out.println("Select DB to Access or Press Q to Quit");
 
-                inFile.close();
-                in.close();
-            }
-            catch(IOException e)
-            {
-                System.out.println(e.getMessage());
+               accounts.get(select).AdminCheck();
             }
 
             catch(Exception e)
             {
-                System.out.println("Invalid Index Value");
+                System.out.println("Something Went Wrong");
             }
-
-            System.out.println("Select User DB to view Entries of.");
         }
-    }
+
+
+    }// ends view/delete
+
+
 
     public void loadAccounts()
-{
+    {
     try (FileInputStream file = new FileInputStream("users.dat");
-         ObjectInputStream accounts = new ObjectInputStream(file);)
+         ObjectInputStream inFile = new ObjectInputStream(file);)
          {
-            creds = (ArrayList<User>)accounts.readObject();
+            accounts = (ArrayList<Account>)inFile.readObject();
 
-            accounts.close();
+            inFile.close();
             file.close();
          }
-    catch(IOException e)
+    catch(Exception e)
     {
         System.out.println(e.getMessage());
     }
-}
-}
+    }// end load
+
+}// end class
+
+
+
