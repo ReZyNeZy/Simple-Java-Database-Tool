@@ -169,7 +169,7 @@ public class Admin
                String user = accounts.get(select).getUsername();
 
                System.out.println("All data Belonging to " + user);
-               System.out.println("Select DB to Access or Press Q to Quit");
+               
 
                accounts.get(select).AdminCheck();
             }

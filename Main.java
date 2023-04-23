@@ -101,8 +101,7 @@ public void logMenu()
                         if (dbStorage.createNewFile())
                         {
                             System.out.println("File " + accounts.get(i).getUsername() + "Created");
-                            ac.setUsername(accounts.get(i).getUsername());
-                            ac.CreateOrAccess();
+                            accounts.get(i).CreateOrAccess();
                         }
                         else
                         {

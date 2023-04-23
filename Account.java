@@ -127,7 +127,7 @@ public Account (String username, String password)
 
             if (database.createNewFile())
             {
-                System.out.println("File Created For " + name);
+                System.out.println("File Created For " + dbName);
             }
 
             else 
@@ -248,8 +248,11 @@ public Account (String username, String password)
 
 public void AdminCheck()
 {
+    System.out.println("IN ADMIN CHECK");
+    System.out.println("Select User DB to Access");
     for (int i = 0; i < data.size(); i++)
     {
+        System.out.println("IN LOOP");
         System.out.println(i + ") " + data.get(i).getFileName());
         System.out.println("");
     }
