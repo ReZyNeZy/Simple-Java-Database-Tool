@@ -113,7 +113,7 @@ public void logMenu()
                     {
                         System.out.println(e.getMessage());
                     }
-                    ac.setUsername(accounts.get(i).getUsername());
+                    //ac.setUsername(accounts.get(i).getUsername());
                 }
 
                 else

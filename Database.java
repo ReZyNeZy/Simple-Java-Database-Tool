@@ -79,14 +79,15 @@ public class Database implements Serializable
     {
         System.out.println("");
         System.out.println("All Entries.");
-
-        for (int i = 0; i < entries.size(); i++)
-        {
-            System.out.println("");
-            System.out.println("Entry: " + entries.get(i).getEntry());
-            System.out.println("Description: " + entries.get(i).getDescription());
-            System.out.println("");
-        }
+       
+            for (int i = 0; i < entries.size(); i++)
+            {
+                System.out.println("");
+                System.out.println("Entry: " + entries.get(i).getEntry());
+                System.out.println("Description: " + entries.get(i).getDescription());
+                System.out.println("");
+            }
+        
     }// end view
 
     public void createEntry()
@@ -233,6 +234,7 @@ public class Database implements Serializable
 
     public void AdminView()
     {
+        loadEntries();
         for (int i = 0; i < entries.size(); i++)
         {
             System.out.println("");
@@ -267,6 +269,21 @@ public class Database implements Serializable
                     String dWarning = "One of your entries was flaged for malicious content and deleted.";
 
                     entries.add(new Entry(eWarning, dWarning));
+
+                    try
+                    {
+                        FileOutputStream out = new FileOutputStream(dbName);
+                        ObjectOutputStream outFile = new ObjectOutputStream(out);
+                                 
+                        outFile.writeObject(entries);
+                        outFile.close();
+                        out.close();
+                    }
+
+                    catch(Exception e)
+                    {
+                        System.out.println(e.getMessage());
+                    }
                 }
 
                 else

@@ -248,11 +248,13 @@ public Account (String username, String password)
 
 public void AdminCheck()
 {
+    loadDBs();
     System.out.println("IN ADMIN CHECK");
     System.out.println("Select User DB to Access");
+    
     for (int i = 0; i < data.size(); i++)
     {
-        System.out.println("IN LOOP");
+        
         System.out.println(i + ") " + data.get(i).getFileName());
         System.out.println("");
     }
