@@ -1,13 +1,13 @@
 import java.io.*;
 import java.util.*;
 
-public class Admin
+public class Admin extends Account
 {
     String username;
     String password;
     Scanner input = new Scanner(System.in);
     boolean keepGoing;
-    ArrayList<Account> accounts = new ArrayList<Account>();
+    ArrayList<User> accounts = new ArrayList<User>();
 
 
     public void setUsername(String username)
@@ -190,7 +190,7 @@ public class Admin
     try (FileInputStream file = new FileInputStream("users.dat");
          ObjectInputStream inFile = new ObjectInputStream(file);)
          {
-            accounts = (ArrayList<Account>)inFile.readObject();
+            accounts = (ArrayList<User>)inFile.readObject();
 
             inFile.close();
             file.close();

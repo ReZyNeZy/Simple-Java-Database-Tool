@@ -8,9 +8,9 @@ public class Main
 {
     Scanner input = new Scanner(System.in);
     boolean keepGoing;
-    ArrayList<Account> accounts  = new ArrayList<Account>();
+    ArrayList<User> accounts  = new ArrayList<User>();
     Admin a = new Admin();
-    Account ac = new Account();
+    User ac = new User();
 
 public static void main(String[] args)
 {
@@ -153,7 +153,7 @@ public void createAccount()
         {
             keepGoing = false;
             
-            accounts.add(new Account(username, password));
+            accounts.add(new User(username, password));
 
             try 
             
@@ -190,7 +190,7 @@ public void loadAccounts()
         FileInputStream file = new FileInputStream("users.dat");
          ObjectInputStream users = new ObjectInputStream(file);
          
-            accounts = (ArrayList<Account>)users.readObject();
+            accounts = (ArrayList<User>)users.readObject();
 
             users.close();
          }
